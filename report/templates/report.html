@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333; margin: 30px; }
+        .header { border-bottom: 3px solid #4A90E2; padding-bottom: 10px; margin-bottom: 30px; }
+        .title { font-size: 28px; font-weight: bold; color: #111; }
+        .subtitle { font-size: 14px; color: #666; }
+        .card { background: #f9f9f9; border: 1px solid #e1e1e1; padding: 20px; border-radius: 6px; margin-bottom: 20px; }
+        .card-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: #2C3E50; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 10px; border-bottom: 1px solid #e1e1e1; }
+        th { background-color: #f1f1f1; font-weight: bold; }
+        .badge-error { color: #c0392b; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="title">💥 RUPTURE Performance & Fuzz Report</div>
+        <div class="subtitle">Automated Execution Telemetry Summary</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">📊 Core Latency & Throughput Metrics</div>
+        <table>
+            <tr><th>Metric Type</th><th>Value Calculated</th></tr>
+            <tr><td>Total Processed Samples</td><td>{{ metrics.total_requests }}</td></tr>
+            <tr><td>Successful Requests (HTTP 200)</td><td>{{ metrics.success_count }}</td></tr>
+            <tr><td>Overall Error Rate</td><td><strong>{{ metrics.error_rate }}%</strong></td></tr>
+            <tr><td>Median Latency (p50)</td><td>{{ metrics.p50 }}s</td></tr>
+            <tr><td>Tail-End Latency (p95)</td><td>{{ metrics.p95 }}s</td></tr>
+            <tr><td>Worst-Case Outlier Latency (p99)</td><td>{{ metrics.p99 }}s</td></tr>
+        </table>
+    </div>
+
+    {% if metrics.error_distribution %}
+    <div class="card">
+        <div class="card-title class-error">🚨 Captured Structural Failures & Exceptions</div>
+        <table>
+            <tr><th>Identified Issue / Classification Type</th><th>Occurrences</th></tr>
+            {% for error_name, count in metrics.error_distribution.items() %}
+            <tr>
+                <td class="badge-error">{{ error_name }}</td>
+                <td>{{ count }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+click
+aiohttp
+pytest
+hypothesis
+weasyprint
+Jinja2
+jsonschema
+allure-pytest
+fastapi
+uvicorn
