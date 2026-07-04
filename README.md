@@ -383,6 +383,7 @@ Rupture/
 └── run_demo.py              # Application Processes Boot & Shutdown Orchestrator
 
 ---
+```
 
 # 🎯 Primary Capabilities
 
