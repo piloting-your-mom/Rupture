@@ -323,85 +323,64 @@ out/demo_report.pdf
 
 # 🛠 Technology Stack
 
-## Language
-
-- Python 3.12
-
----
-
-## CLI
-
-- click
-
----
-
-## Asynchronous Networking
-
-- asyncio
-- aiohttp
-
----
-
-## Property-Based Testing
-
-- Hypothesis
-
----
-
-## Schema Validation
-
-- jsonschema
-
----
-
-## Reporting
-
-- Jinja2
-- WeasyPrint
-
----
-
-## Testing
-
-- pytest
-- allure-pytest
-
----
-
-## Containerization
-
-- Docker
-- Docker Compose
-
----
+- **Language:** Python 3.12
+- **CLI Framework:** click
+- **Asynchronous Networking:** asyncio, aiohttp
+- **Property-Based Testing:** Hypothesis
+- **Schema Validation:** jsonschema
+- **Reporting:** Jinja2, WeasyPrint
+- **Testing:** pytest, allure-pytest
+- **Containerization:** Docker, Docker Compose
 
 ## Example Project Structure
 
 ```text
-rupture/
+Rupture/
 │
-├── app/
-│   ├── cli.py
-│   ├── worker.py
-│   ├── fuzz.py
-│   ├── validator.py
-│   ├── telemetry.py
-│   ├── report.py
+├── .hypothesis/             # Hypothesis history cache
+├── .pytest_cache/           # Pytest execution cache
+│
+├── cli/
+│   └── main.py              # CLI Controller Options & Parsing
+│
+├── demo/
+│   ├── __init__.py
+│   └── app.py               # Flaky Mock Target FastAPI Definition
+│
+├── engine/
+│   ├── __init__.py
+│   └── core.py              # Asynchronous Connection Pool Workers
+│
+├── fuzz/
+│   ├── __init__.py
+│   ├── strategies.py        # Recursive Hypothesis Data Generation
+│   └── validator.py         # Response JSON Schema Validation Core
+│
+├── out/                     # Mounted host directory for generated PDFs
+│
+├── report/
+│   ├── __init__.py
+│   ├── aggregator.py        # Telemetry Math & WeasyPrint Handlers
 │   └── templates/
+│       └── report.html      # Jinja2 Layout Blueprint HTML
 │
-├── sandbox/
-│   ├── main.py
-│   └── Dockerfile
+├── results/                 # Raw pipeline telemetry datasets
 │
-├── tests/
+├── runner/
+│   ├── __init__.py
+│   └── test_fuzzer.py       # Pytest Harness Integration & Allure Setup
 │
-├── out/
+├── schemas/
+│   ├── demo_schema.json     # Sandbox Endpoint Validation Contract
+│   └── user_schema.json     # Generic Target Validation Schema
 │
-├── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
-└── README.md
-```
+├── venv/                    # Local Python virtual environment
+│
+├── .gitignore               # Excluded git tracking manifests
+├── Dockerfile               # System Library Dependencies Installation Layer
+├── README.md                # System Documentation & Architecture Guide
+├── requirements.txt         # Project Execution Modules Index
+└── run_demo.py              # Application Processes Boot & Shutdown Orchestrator
 
 ---
 
