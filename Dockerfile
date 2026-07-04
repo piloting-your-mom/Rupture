@@ -21,4 +21,11 @@ COPY . .
 RUN mkdir -p out
 
 # CHANGED: The container now runs the orchestration script by default
-ENTRYPOINT ["python", "run_demo.py"]
+ENTRYPOINT ["python", "-m", "cli.main"]
+
+CMD [
+    "--url",
+    "http://sandbox:8000/test",
+    "--users",
+    "50"
+]

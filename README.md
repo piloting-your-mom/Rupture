@@ -6,6 +6,17 @@ Built using `asyncio`, `aiohttp`, `Hypothesis`, and `jsonschema`, Rupture simula
 
 ---
 
+## ✨ Features
+
+- ⚡ High-performance asynchronous load testing with `asyncio`
+- 🧪 Property-based fuzzing using Hypothesis
+- 📜 JSON Schema contract validation
+- 🔍 Detects silent API contract corruption hidden behind `200 OK` responses
+- 📊 p50 / p95 / p99 latency telemetry
+- 📄 Automated PDF reporting
+- 🐳 Fully containerized with Docker
+- 🧩 Includes a built-in FastAPI sandbox for demonstration
+
 # 🏗️ System Architecture
 
 Rupture operates on an orchestrated, non-blocking asynchronous pipeline that cleanly separates payload generation, network execution, validation, and reporting.
@@ -117,16 +128,18 @@ After execution completes, Rupture aggregates telemetry and generates a polished
 
 ---
 
-# 🚀 Quick Start (Local Sandbox Demo)
+# 🚀 Quick Start
 
-Rupture includes a fully containerized FastAPI sandbox that intentionally introduces contract violations, allowing the engine to demonstrate its detection capabilities without requiring any external API.
+Rupture can be used in two ways:
+
+1. **Run the bundled FastAPI sandbox** (recommended for first-time users)
+2. **Fuzz any HTTP API endpoint** using the built-in CLI
 
 ---
 
 ## Prerequisites
 
-- Docker Desktop installed
-- Docker daemon running
+- Docker Desktop installed and running
 
 ---
 
@@ -147,9 +160,9 @@ docker build -t rupture .
 
 ---
 
-## 3. Run the Automated Demo
+# 🎯 Option 1 — Run the Bundled Sandbox Demo
 
-The following command executes the complete sandbox test suite and mounts the generated reports onto your local machine.
+By default, the Docker image launches the included FastAPI sandbox application and automatically fuzzes it. This demonstrates Rupture's ability to detect API contract violations and generate performance telemetry without requiring any external setup.
 
 ### Linux/macOS
 
@@ -173,25 +186,89 @@ rupture
 docker run --rm -v %cd%/out:/app/out rupture
 ```
 
----
-
-## 4. View the Report
-
-After execution completes:
+After execution completes, the generated report will be available at
 
 ```
-./out/demo_report.pdf
+out/demo_report.pdf
 ```
 
-will contain:
+The report contains:
 
-- Latency graphs
-- Request statistics
-- Schema validation failures
-- Percentile metrics
-- Contract violation summary
+- Latency statistics
+- p50 / p95 / p99 metrics
+- Contract violations
+- Success/failure summary
+- Request telemetry
 
 ---
+
+# 🌐 Option 2 — Fuzz Your Own API
+
+To target your own API instead of the bundled demo, override the default container entrypoint and invoke the CLI directly.
+
+### Linux/macOS
+
+```bash
+docker run --rm \
+--entrypoint python \
+-v $(pwd)/out:/app/out \
+rupture \
+-m cli.main \
+--url https://your-api.example.com/endpoint \
+--users 100
+```
+
+### Windows PowerShell
+
+```powershell
+docker run --rm `
+--entrypoint python `
+-v ${PWD}/out:/app/out `
+rupture `
+-m cli.main `
+--url https://your-api.example.com/endpoint `
+--users 100
+```
+
+### Windows CMD
+
+```cmd
+docker run --rm --entrypoint python -v %cd%/out:/app/out rupture -m cli.main --url https://your-api.example.com/endpoint --users 100
+```
+
+---
+
+## Using JSON Schema Validation
+
+If you have a JSON Schema describing the expected API response, mount the schema into the container and provide its path using `--schema`.
+
+Example:
+
+```bash
+docker run --rm \
+--entrypoint python \
+-v $(pwd)/out:/app/out \
+-v $(pwd)/schema.json:/app/schema.json \
+rupture \
+-m cli.main \
+--url https://your-api.example.com/users \
+--users 100 \
+--schema /app/schema.json
+```
+
+When a schema is supplied, Rupture validates every successful (`200 OK`) response against it and reports any structural contract violations.
+
+---
+
+## CLI Arguments
+
+| Argument | Description |
+|----------|-------------|
+| `--url` | Target API endpoint |
+| `--users` | Number of concurrent workers |
+| `--schema` | Optional JSON Schema file for response validation |
+
+All generated reports are written to the mounted `out/` directory.
 
 # 📊 Sample Runtime Output
 
